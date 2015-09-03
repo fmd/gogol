@@ -2,10 +2,41 @@ package bronson
 
 import (
     "github.com/go-gl/gl/v2.1/gl"
-    "unsafe"
     //"fmt"
 )
 
+func BuildAFuckingSquare() {
+    //We're well past triangles now, baby. Back to OpenGL 2.1 for that feelgood retro aesthetic.
+    // var t [4096]float32
+    //var buffer uint32
+    //gl.GenBuffers(1, &buffer)
+}
+
+func RenderTheFuckingSquare() {
+    gl.Begin(gl.QUADS)
+    gl.Color3f(1.0, 0.0, 0.0)
+    gl.Vertex2f(-50.0, -50.0)
+    gl.Color3f(0.0, 1.0, 0.0)
+    gl.Vertex2f(-50.0, 50.0)
+    gl.Color3f(0.0, 0.0, 1.0)
+    gl.Vertex2f(50.0, 50.0)
+    gl.Color3f(1.0, 1.0, 1.0)
+    gl.Vertex2f(50.0, -50.0)
+    gl.End()
+
+    gl.Begin(gl.QUADS)
+    gl.Color3f(1.0, 0.0, 0.0)
+    gl.Vertex2f(51.0, -50.0)
+    gl.Color3f(0.0, 1.0, 0.0)
+    gl.Vertex2f(51.0, 50.0)
+    gl.Color3f(0.0, 0.0, 1.0)
+    gl.Vertex2f(151.0, 50.0)
+    gl.Color3f(1.0, 1.0, 1.0)
+    gl.Vertex2f(151.0, -50.0)
+    gl.End()
+}
+
+/*
 const NUM_VERTICES_IN_SHAPE uint32 = 4
 const FLOAT_SIZE uint32 = 4
 
@@ -93,7 +124,7 @@ func RenderAllGeometry() {
     var vbo uint32 = 1
 
     gl.BindBufferARB(gl.ARRAY_BUFFER_ARB, vbo)
-    gl.VertexPointer(2, gl.FLOAT, 0, 0)
+    gl.VertexPointer(2, gl.FLOAT, 0, nil)
 
     gl.EnableClientState(gl.VERTEX_ARRAY)
 
@@ -109,8 +140,8 @@ func render(g *Geometry, vbo *uint32) {
         vbo = &g.VertexBuffer.Object
 
         gl.BindBufferARB(gl.ARRAY_BUFFER_ARB, *vbo)
-        gl.VertexPointer(2, gl.FLOAT, 0, 0)
+        gl.VertexPointer(2, gl.FLOAT, 0, nil)
     }
 
     gl.DrawArrays(uint32(gl.QUADS), int32(g.Index), int32(NUM_VERTICES_IN_SHAPE))
-}
+}*/
