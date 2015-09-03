@@ -1,27 +1,25 @@
-package engine
+package bronson
 
-type Engine struct {
+type Bronson struct {
     Window *Window
     EventBuffer EventBuffer
 }
 
-func NewEngine(winOpts WindowOpts) *Engine {
-    e := &Engine{
+func New(winOpts WindowOpts) *Bronson {
+    return &Bronson{
         Window: NewWindow(winOpts),
         EventBuffer: EventBuffer{},
     }
-
-    return e
 }
 
-func (e *Engine) ProcessOneFrame() {
+func (e *Bronson) ProcessOneFrame() {
     e.Window.Swap()
     ProcessOneFrameOfInput(&e.EventBuffer)
     e.Window.Clear()
-    RenderAllRenderables()
+    RenderAllGeometry()
 }
 
-func (e *Engine) ReceiveEvents() EventBuffer {
+func (e *Bronson) ReceiveEvents() EventBuffer {
     buffer := e.EventBuffer
     e.EventBuffer = EventBuffer{}
     return buffer

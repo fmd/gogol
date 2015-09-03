@@ -1,4 +1,4 @@
-package engine
+package bronson
 
 import (
     "github.com/go-gl/gl/v2.1/gl"
