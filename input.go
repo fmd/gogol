@@ -4,39 +4,46 @@ import (
     "github.com/veandco/go-sdl2/sdl"
 )
 
-// FIX KEY REPEAT
-
 type KeyEventHandler []func(KeyCode)
 type KeyEventHandlerMap map[KeyCode][]func(KeyCode)
 
 type Input struct {
     KeyDownHandlers KeyEventHandlerMap
     KeyUpHandlers KeyEventHandlerMap
+    KeyStates []uint8
+    oldKeyStates []uint8
 }
 
 func NewInput() *Input {
-    return &Input{
+    i := &Input{
         KeyDownHandlers: make(KeyEventHandlerMap),
         KeyUpHandlers: make(KeyEventHandlerMap),
+        KeyStates: sdl.GetKeyboardState(),
     }
+    i.oldKeyStates = make([]uint8, len(i.KeyStates))
+
+    return i
 }
+
 
 func (i *Input) Handle() {
     var event sdl.Event
+
+    copy(i.oldKeyStates, i.KeyStates)
     for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
         switch t := event.(type) {
             case *sdl.QuitEvent:
                 B.Quit = true
-            case *sdl.MouseMotionEvent:
-                break
-                //fmt.Printf("[%d ms] MouseMotion\tid:%d\tx:%d\ty:%d\txrel:%d\tyrel:%d\n",
-                //           t.Timestamp, t.Which, t.X, t.Y, t.XRel, t.YRel)
             case *sdl.KeyDownEvent:
                 code := sdl.GetScancodeFromKey(t.Keysym.Sym)
-                i.KeyDownHandlers.trigger(KeyCode(code))
+                if i.oldKeyStates[code] == 0 {
+                    i.KeyDownHandlers.trigger(KeyCode(code))
+                }
             case *sdl.KeyUpEvent:
                 code := sdl.GetScancodeFromKey(t.Keysym.Sym)
-                i.KeyUpHandlers.trigger(KeyCode(code))
+                if i.oldKeyStates[code] == 1 {
+                    i.KeyUpHandlers.trigger(KeyCode(code))
+                }
         }
     }
 }
