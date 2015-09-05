@@ -2,38 +2,34 @@ package bronson
 
 import (
     "github.com/go-gl/gl/v2.1/gl"
-    //"fmt"
 )
+
+var vbo uint32
+var cVbo uint32
+var verts []float32
+var colors []float32
+
+func init() {
+    verts = []float32{-50.0, -50.0, 0.0, -50.0, 50.0, 0.0, 50.0, 50.0, 0.0, 50.0, -50.0, 0.0}
+}
 
 func BuildAFuckingSquare() {
     //We're well past triangles now, baby. Back to OpenGL 2.1 for that feelgood retro aesthetic.
-    // var t [4096]float32
-    //var buffer uint32
-    //gl.GenBuffers(1, &buffer)
+    gl.GenBuffers(1, &vbo)
+    gl.GenBuffers(1, &cVbo)
+
+    gl.BindBuffer(gl.ARRAY_BUFFER, vbo)
+    gl.BufferData(gl.ARRAY_BUFFER, len(verts)*4, gl.Ptr(verts), gl.STATIC_DRAW)
+
 }
 
 func RenderTheFuckingSquare() {
-    gl.Begin(gl.QUADS)
-    gl.Color3f(1.0, 0.0, 0.0)
-    gl.Vertex2f(-50.0, -50.0)
-    gl.Color3f(0.0, 1.0, 0.0)
-    gl.Vertex2f(-50.0, 50.0)
-    gl.Color3f(0.0, 0.0, 1.0)
-    gl.Vertex2f(50.0, 50.0)
-    gl.Color3f(1.0, 1.0, 1.0)
-    gl.Vertex2f(50.0, -50.0)
-    gl.End()
+    gl.EnableClientState(gl.VERTEX_ARRAY)
 
-    gl.Begin(gl.QUADS)
-    gl.Color3f(1.0, 0.0, 0.0)
-    gl.Vertex2f(51.0, -50.0)
-    gl.Color3f(0.0, 1.0, 0.0)
-    gl.Vertex2f(51.0, 50.0)
-    gl.Color3f(0.0, 0.0, 1.0)
-    gl.Vertex2f(151.0, 50.0)
-    gl.Color3f(1.0, 1.0, 1.0)
-    gl.Vertex2f(151.0, -50.0)
-    gl.End()
+    gl.VertexPointer(3, gl.FLOAT, 0, gl.Ptr(verts))
+    gl.DrawArrays(gl.QUADS, 0, int32(4))
+
+    gl.DisableClientState(gl.VERTEX_ARRAY);
 }
 
 /*

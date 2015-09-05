@@ -80,7 +80,7 @@ func (w *Window) createContext() {
 }
 
 func (w *Window) setVideoOptions() {
-    gl.ClearColor(0.0,0.0,0.0,1.0)
+    gl.ClearColor(0.4,0.0,0.3,1.0)
 
     projectionMode()
     setViewport(w.Width, w.Height)
