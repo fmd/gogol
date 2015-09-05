@@ -2,6 +2,12 @@ package bronson
 
 type KeyCode uint16
 
+const M_LEFT KeyCode = 1
+const M_MIDDLE KeyCode = 2
+const M_RIGHT KeyCode = 3
+const M_X1 KeyCode = 4
+const M_X2 KeyCode = 5
+
 const K_UNKNOWN KeyCode = 0
 const K_A KeyCode = 4
 const K_B KeyCode = 5
