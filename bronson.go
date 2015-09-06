@@ -9,6 +9,7 @@ type Bronson struct {
     Quit bool
     Window *Window
     Input *Input
+    Renderer *Renderer
 }
 
 // Initialises Bronson.
@@ -17,6 +18,7 @@ func Init(opts WindowOpts) *Bronson {
     B = &Bronson{
         Window: NewWindow(opts),
         Input: NewInput(),
+        Renderer: NewRenderer(),
     }
 
     return B
@@ -33,7 +35,7 @@ func ProcessOneFrame() {
     B.Input.Handle()
     B.Window.Swap()
     B.Window.Clear()
-    RenderTheFuckingSquare()
+    B.Renderer.RenderTheFuckingSquare()
 }
 
 // Quits Bronson. Defer this to the end of your app's main function.

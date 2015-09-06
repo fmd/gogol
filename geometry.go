@@ -1,37 +1,5 @@
 package bronson
 
-import (
-    "github.com/go-gl/gl/v2.1/gl"
-)
-
-var vbo uint32
-var cVbo uint32
-var verts []float32
-var colors []float32
-
-func init() {
-    verts = []float32{-50.0, -50.0, -50.0, 50.0, 50.0, 50.0, 50.0, -50.0}
-}
-
-func BuildAFuckingSquare() {
-    //We're well past triangles now, baby. Back to OpenGL 2.1 for that feelgood retro aesthetic.
-    gl.GenBuffers(1, &vbo)
-    gl.GenBuffers(1, &cVbo)
-
-    gl.BindBuffer(gl.ARRAY_BUFFER, vbo)
-    gl.BufferData(gl.ARRAY_BUFFER, len(verts)*4, gl.Ptr(verts), gl.STATIC_DRAW)
-
-}
-
-func RenderTheFuckingSquare() {
-    gl.EnableClientState(gl.VERTEX_ARRAY)
-
-    gl.VertexPointer(2, gl.FLOAT, 0, gl.Ptr(verts))
-    gl.DrawArrays(gl.QUADS, 0, int32(4))
-
-    gl.DisableClientState(gl.VERTEX_ARRAY);
-}
-
 /*
 const NUM_VERTICES_IN_SHAPE uint32 = 4
 const FLOAT_SIZE uint32 = 4
