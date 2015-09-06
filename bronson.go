@@ -22,7 +22,7 @@ func Init(opts WindowOpts) *Bronson {
     return B
 }
 
-
+// A global function that returns whether Bronson should quit.
 func ShouldQuit() bool {
     return B.Quit
 }

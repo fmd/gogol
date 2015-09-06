@@ -5,12 +5,15 @@ import (
     "github.com/veandco/go-sdl2/sdl"
 )
 
+// The options to pass in when creating a new window.
 type WindowOpts struct {
     Title string
     Width int
     Height int
 }
 
+// The Window type.
+// There should only ever be one of these.
 type Window struct {
     Title string
     Width int
@@ -19,6 +22,7 @@ type Window struct {
     Context sdl.GLContext
 }
 
+// Creates a new Bronson window.
 func NewWindow(opts WindowOpts) *Window {
     w := &Window{
         Title: opts.Title,
@@ -27,6 +31,7 @@ func NewWindow(opts WindowOpts) *Window {
     }
 
     initSDL()
+    initGL()
 
     w.createWindow()
     w.createContext()
@@ -35,14 +40,19 @@ func NewWindow(opts WindowOpts) *Window {
     return w
 }
 
+// Swaps the OpenGL window.
+// Call this after everything has been rendered.
 func (w *Window) Swap() {
     sdl.GL_SwapWindow(w.Window)
 }
 
+// Clears the openGL window.
+// Call this before everything is rendered.
 func (w *Window) Clear() {
     gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 }
 
+// Destroys the Bronson window.
 func (w *Window) Destroy() {
     sdl.GL_DeleteContext(w.Context)
     w.Window.Destroy()
@@ -50,12 +60,13 @@ func (w *Window) Destroy() {
 }
 
 func initSDL() {
-    var err error
-    if err = sdl.Init(sdl.INIT_EVERYTHING); err != nil {
+    if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
         panic(err)
     }
+}
 
-    if err = gl.Init(); err != nil {
+func initGL() {
+    if err := gl.Init(); err != nil {
         panic(err)
     }
 }

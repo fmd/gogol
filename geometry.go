@@ -10,7 +10,7 @@ var verts []float32
 var colors []float32
 
 func init() {
-    verts = []float32{-50.0, -50.0, 0.0, -50.0, 50.0, 0.0, 50.0, 50.0, 0.0, 50.0, -50.0, 0.0}
+    verts = []float32{-50.0, -50.0, -50.0, 50.0, 50.0, 50.0, 50.0, -50.0}
 }
 
 func BuildAFuckingSquare() {
@@ -26,7 +26,7 @@ func BuildAFuckingSquare() {
 func RenderTheFuckingSquare() {
     gl.EnableClientState(gl.VERTEX_ARRAY)
 
-    gl.VertexPointer(3, gl.FLOAT, 0, gl.Ptr(verts))
+    gl.VertexPointer(2, gl.FLOAT, 0, gl.Ptr(verts))
     gl.DrawArrays(gl.QUADS, 0, int32(4))
 
     gl.DisableClientState(gl.VERTEX_ARRAY);
