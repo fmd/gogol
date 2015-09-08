@@ -1,4 +1,4 @@
-package bronson
+package gogol
 
 type Vector struct {
     X float32

@@ -1,4 +1,4 @@
-package bronson
+package gogol
 
 import (
     "github.com/veandco/go-sdl2/sdl"
@@ -30,15 +30,15 @@ func NewInput() *Input {
 }
 
 func OnMouseDown(code KeyCode, fn func(KeyCode)) {
-    B.Input.MouseDownHandlers[code] = append(B.Input.MouseDownHandlers[code], fn)
+    G.Input.MouseDownHandlers[code] = append(G.Input.MouseDownHandlers[code], fn)
 }
 
 func OnKeyDown(code KeyCode, fn func(KeyCode)) {
-    B.Input.KeyDownHandlers[code] = append(B.Input.KeyDownHandlers[code], fn)
+    G.Input.KeyDownHandlers[code] = append(G.Input.KeyDownHandlers[code], fn)
 }
 
 func OnKeyUp(code KeyCode, fn func(KeyCode)) {
-    B.Input.KeyUpHandlers[code] = append(B.Input.KeyUpHandlers[code], fn)
+    G.Input.KeyUpHandlers[code] = append(G.Input.KeyUpHandlers[code], fn)
 }
 
 func (i *Input) Handle() {
@@ -48,7 +48,7 @@ func (i *Input) Handle() {
     for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
         switch e := event.(type) {
             case *sdl.QuitEvent:
-                B.Quit = true
+                G.Quit = true
             case *sdl.MouseButtonEvent:
                 i.handleMouseButtonEvent(e)
             case *sdl.KeyDownEvent:

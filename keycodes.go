@@ -1,4 +1,4 @@
-package bronson
+package gogol
 
 type KeyCode uint16
 

@@ -1,45 +1,45 @@
-package bronson
+package gogol
 
-// The global Bronson object.
-var B *Bronson
+// The global Gogol object.
+var G *Gogol
 
-// The type structure of the global Bronson object.
+// The type structure of the global Gogol object.
 // There should only ever be one of these.
-type Bronson struct {
+type Gogol struct {
     Quit bool
     Window *Window
     Input *Input
     Renderer *Renderer
 }
 
-// Initialises Bronson.
+// Initialises Gogol.
 // This function is not called 'New' to signify it should only be called once.
-func Init(opts WindowOpts) *Bronson {
-    B = &Bronson{
+func Init(opts WindowOpts) *Gogol {
+    G = &Gogol{
         Window: NewWindow(opts),
         Input: NewInput(),
         Renderer: NewRenderer(),
     }
 
-    return B
+    return G
 }
 
-// A global function that returns whether Bronson should quit.
+// A global function that returns whether Gogol should quit.
 func ShouldQuit() bool {
-    return B.Quit
+    return G.Quit
 }
 
 // Processes one frame.
 // This should be called on each pass of the game's loop.
 func ProcessOneFrame() {
-    B.Input.Handle()
-    B.Window.Swap()
-    B.Window.Clear()
-    B.Renderer.RenderTheFuckingSquare()
+    G.Input.Handle()
+    G.Window.Swap()
+    G.Window.Clear()
+    G.Renderer.Render()
 }
 
-// Quits Bronson. Defer this to the end of your app's main function.
+// Quits Gogol. Defer this to the end of your app's main function.
 // Destroys the window, cleans up the openGL context.
 func Cleanup() {
-    B.Window.Destroy()
+    G.Window.Destroy()
 }

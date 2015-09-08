@@ -1,4 +1,4 @@
-package bronson
+package gogol
 
 import (
     "github.com/go-gl/gl/v2.1/gl"
@@ -7,6 +7,11 @@ import (
 const (
     FloatSize = 4
 )
+
+type VboPosition struct {
+    Vbo *Vbo
+    Index uint32
+}
 
 type Vbo struct {
     Vertices []float32

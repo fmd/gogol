@@ -1,4 +1,4 @@
-package bronson
+package gogol
 
 type Transform struct {
     parent   *Transform
@@ -8,4 +8,10 @@ type Transform struct {
 
     children []*Transform
     matrix Matrix
+}
+
+func NewTransform(parent *Transform) *Transform {
+    return &Transform{
+        parent: parent,
+    }
 }
