@@ -1,5 +1,9 @@
 package gogol
 
+import (
+    "github.com/go-gl/gl/v2.1/gl"
+)
+
 type Transform struct {
     parent   *Transform
     position Vector
@@ -32,5 +36,16 @@ func (t *Transform) SetNeedsUpdate() {
     t.NeedsUpdate = true
     for _, c := range t.children {
         c.SetNeedsUpdate()
+    }
+}
+
+func (t *Transform) update() {
+    gl.LoadMatrixf(&(t.parent.matrix[0]))
+    gl.Translatef(t.position.X, t.position.Y, 0)
+    gl.Rotatef(t.rotation, 0, 0, -1)
+    gl.GetFloatv(gl.MODELVIEW_MATRIX, &(t.parent.matrix[0]))
+
+    for _, c := range t.children {
+        c.update()
     }
 }
