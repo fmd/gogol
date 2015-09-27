@@ -5,20 +5,41 @@ import (
 )
 
 type Transform struct {
-    parent   *Transform
+    Parent   *Transform
     position Vector
     scale    Vector
     rotation float32
-    children []*Transform
-    matrix Matrix
+    Children []*Transform
+    Matrix Matrix
 
     NeedsUpdate bool
 }
 
-func NewTransform(parent *Transform) *Transform {
-    return &Transform{
-        parent: parent,
+var rootTransform *Transform
+
+func init() {
+    rootTransform = &Transform{
+        Parent: nil,
+        Matrix: NewMatrix(),
     }
+}
+
+func NewTransform(parent *Transform) *Transform {
+    t := &Transform{
+        Parent: parent,
+        Matrix: NewMatrix(),
+    }
+
+    if parent == nil {
+        t.Parent = rootTransform
+    }
+
+    return t
+}
+
+func (t *Transform) AddChild(c *Transform) {
+    c.Parent = t
+    t.Children = append(t.Children, c)
 }
 
 func (t *Transform) Translate(x float32, y float32) {
@@ -34,18 +55,26 @@ func (t *Transform) Rotate(deg float32) {
 
 func (t *Transform) SetNeedsUpdate() {
     t.NeedsUpdate = true
-    for _, c := range t.children {
+    for _, c := range t.Children {
         c.SetNeedsUpdate()
     }
 }
 
-func (t *Transform) update() {
-    gl.LoadMatrixf(&(t.parent.matrix[0]))
+func (t *Transform) Update() {
+    var m *float32
+    if t.Parent != nil {
+        m = &(t.Parent.Matrix[0])
+    } else {
+        m = &(t.Matrix[0])
+    }
+
+    gl.LoadMatrixf(m)
     gl.Translatef(t.position.X, t.position.Y, 0)
     gl.Rotatef(t.rotation, 0, 0, -1)
-    gl.GetFloatv(gl.MODELVIEW_MATRIX, &(t.parent.matrix[0]))
+    gl.GetFloatv(gl.MODELVIEW_MATRIX, &(t.Matrix[0]))
+    t.NeedsUpdate = false
 
-    for _, c := range t.children {
-        c.update()
+    for _, c := range t.Children {
+        c.Update()
     }
 }

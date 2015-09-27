@@ -29,10 +29,23 @@ func NewRenderer() *Renderer {
 func (r *Renderer) Render() {
     gl.EnableClientState(gl.VERTEX_ARRAY)
 
+    rVbo := r.Vbos[0]
+    gl.BindBuffer(gl.ARRAY_BUFFER, rVbo.Id)
+
     for _, g := range r.GameObjects {
-        gl.BindBuffer(gl.ARRAY_BUFFER, g.VboPosition.Vbo.Id)
+        if rVbo != g.VboPosition.Vbo {
+            rVbo = g.VboPosition.Vbo
+            gl.BindBuffer(gl.ARRAY_BUFFER, rVbo.Id)
+        }
+
         gl.VertexPointer(2, gl.FLOAT, 0, nil)
-        gl.DrawArrays(gl.QUADS, 0, int32(4))
+
+        if g.Transform.NeedsUpdate {
+            g.Transform.Update()
+        }
+
+        gl.LoadMatrixf(&(g.Transform.Matrix[0]))
+        gl.DrawArrays(gl.QUADS, int32(g.VboPosition.Index), int32(4))
     }
 
     gl.DisableClientState(gl.VERTEX_ARRAY);
