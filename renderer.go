@@ -10,15 +10,15 @@ const (
 
 type Renderer struct {
     Vbos []*Vbo
-    VboPosition *VboPosition
-    GameObjects []*GameObject
+    VboPosition VboPosition
+    Components []Component
 }
 
 func NewRenderer() *Renderer {
     vbo := NewVbo(VboLength)
     r := &Renderer{
         Vbos: []*Vbo{vbo},
-        VboPosition: &VboPosition{
+        VboPosition: VboPosition{
             Vbo: vbo,
             Index: 0,
         },
@@ -32,32 +32,39 @@ func (r *Renderer) Render() {
     rVbo := r.Vbos[0]
     gl.BindBuffer(gl.ARRAY_BUFFER, rVbo.Id)
 
-    for _, g := range r.GameObjects {
-        if rVbo != g.VboPosition.Vbo {
-            rVbo = g.VboPosition.Vbo
+    for _, c := range r.Components {
+        renderable := c.GetRenderable()
+        transform := c.GetTransform()
+
+        if renderable == nil || transform == nil || !c.ShouldRender() {
+            continue
+        }
+
+        if rVbo != renderable.VboPosition.Vbo {
+            rVbo = renderable.VboPosition.Vbo
             gl.BindBuffer(gl.ARRAY_BUFFER, rVbo.Id)
         }
 
         gl.VertexPointer(2, gl.FLOAT, 0, nil)
 
-        if g.Transform.NeedsUpdate {
-            g.Transform.Update()
+        if transform.NeedsUpdate {
+            transform.Update()
         }
 
-        gl.LoadMatrixf(&(g.Transform.Matrix[0]))
-        gl.DrawArrays(gl.QUADS, int32(g.VboPosition.Index), int32(4))
+        gl.LoadMatrixf(&(transform.Matrix[0]))
+        gl.DrawArrays(gl.QUADS, int32(renderable.VboPosition.Index / 2), int32(renderable.Length / 2))
     }
 
     gl.DisableClientState(gl.VERTEX_ARRAY);
 }
 
-func (r *Renderer) GetNewVboPosition(verts []float32) *VboPosition {
+func (r *Renderer) NewVboPosition(verts []float32) VboPosition {
     pos := r.copyVboPosition()
 
     if len(verts) + int(r.VboPosition.Index) > VboLength {
         vbo := NewVbo(VboLength)
         r.Vbos = append(r.Vbos, vbo)
-        r.VboPosition = &VboPosition{
+        r.VboPosition = VboPosition{
             Vbo: vbo,
             Index: 0,
         }
@@ -68,8 +75,8 @@ func (r *Renderer) GetNewVboPosition(verts []float32) *VboPosition {
     return pos
 }
 
-func (r *Renderer) copyVboPosition() *VboPosition{
-    return &VboPosition{
+func (r *Renderer) copyVboPosition() VboPosition{
+    return VboPosition{
         Vbo: r.VboPosition.Vbo,
         Index: r.VboPosition.Index,
     }
