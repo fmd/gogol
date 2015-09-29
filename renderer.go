@@ -5,6 +5,7 @@ import (
 )
 
 const (
+    ValsInVertex = 2
     VboLength = 4096
 )
 
@@ -45,14 +46,15 @@ func (r *Renderer) Render() {
             gl.BindBuffer(gl.ARRAY_BUFFER, rVbo.Id)
         }
 
-        gl.VertexPointer(2, gl.FLOAT, 0, nil)
+        gl.VertexPointer(ValsInVertex, gl.FLOAT, 0, nil)
 
         if transform.NeedsUpdate {
             transform.Update()
         }
 
         gl.LoadMatrixf(&(transform.Matrix[0]))
-        gl.DrawArrays(gl.QUADS, int32(renderable.VboPosition.Index / 2), int32(renderable.Length / 2))
+        gl.DrawArrays(gl.QUADS, int32(renderable.VboPosition.Index / ValsInVertex),
+                                int32(renderable.Length / ValsInVertex))
     }
 
     gl.DisableClientState(gl.VERTEX_ARRAY);
