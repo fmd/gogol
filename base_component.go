@@ -16,16 +16,14 @@ func (b *BaseComponent) GetRenderable() *Renderable {
 }
 
 //TODO: Change, add scene add, scene remove, etc
-func (b *BaseComponent) ShouldRender() bool {
+func (b *BaseComponent) Visible() bool {
     return true
 }
 
-//TODO: Maybe rethink this?
 func (b *BaseComponent) SetParent(c Component) {
     b.parent = c
 }
 
-//TODO: Maybe rethink this?
 func (b *BaseComponent) AddChild(c Component) {
     c.SetParent(b)
     b.children = append(b.children, c)
@@ -39,6 +37,6 @@ func NewBaseComponent(verts []float32, parent *Transform) *BaseComponent {
     }
 
     //TODO: This should be kept track of and added and removed with the scene
-    G.Renderer.Components = append(G.Renderer.Components, c)
+    G.Renderer.RenderList.PushBack(c)
     return c
 }
