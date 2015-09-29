@@ -4,7 +4,10 @@ package gogol
 type Component interface {
     GetTransform() *Transform
     GetRenderable() *Renderable
+
     Visible() bool
+    Show()
+    Hide()
 
     SetParent(Component)
     AddChild(Component)

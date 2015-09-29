@@ -1,7 +1,6 @@
 package gogol
 
 import (
-    "container/list"
     "github.com/go-gl/gl/v2.1/gl"
 )
 
@@ -13,7 +12,7 @@ const (
 type Renderer struct {
     Vbos []*Vbo
     VboPosition VboPosition
-    RenderList *list.List
+    RenderList *RenderList
 }
 
 func NewRenderer() *Renderer {
@@ -24,8 +23,9 @@ func NewRenderer() *Renderer {
             Vbo: vbo,
             Index: 0,
         },
-        RenderList: list.New(),
+        RenderList: NewRenderList(),
     }
+
     return r
 }
 
@@ -35,8 +35,7 @@ func (r *Renderer) Render() {
     rVbo := r.Vbos[0]
     gl.BindBuffer(gl.ARRAY_BUFFER, rVbo.Id)
 
-    for el := r.RenderList.Front(); el != nil; el = el.Next() {
-        c := el.Value.(Component)
+    for _, c := range r.RenderList.Flatten() {
         renderable := c.GetRenderable()
         transform := c.GetTransform()
 

@@ -5,13 +5,13 @@ import (
 )
 
 type Transform struct {
-    Parent   *Transform
     position Vector
     scale    Vector
     rotation float32
-    Children []*Transform
-    Matrix Matrix
+    parentTransform *Transform
+    childTransforms []*Transform
 
+    Matrix Matrix
     NeedsUpdate bool
 }
 
@@ -19,27 +19,27 @@ var rootTransform *Transform
 
 func init() {
     rootTransform = &Transform{
-        Parent: nil,
+        parentTransform: nil,
         Matrix: NewMatrix(),
     }
 }
 
 func NewTransform(parent *Transform) *Transform {
     t := &Transform{
-        Parent: parent,
+        parentTransform: parent,
         Matrix: NewMatrix(),
     }
 
     if parent == nil {
-        t.Parent = rootTransform
+        t.parentTransform = rootTransform
     }
 
     return t
 }
 
 func (t *Transform) AddChild(c *Transform) {
-    c.Parent = t
-    t.Children = append(t.Children, c)
+    c.parentTransform = t
+    t.childTransforms = append(t.childTransforms, c)
 }
 
 func (t *Transform) Translate(x float32, y float32) {
@@ -55,15 +55,15 @@ func (t *Transform) Rotate(deg float32) {
 
 func (t *Transform) SetNeedsUpdate() {
     t.NeedsUpdate = true
-    for _, c := range t.Children {
+    for _, c := range t.childTransforms {
         c.SetNeedsUpdate()
     }
 }
 
 func (t *Transform) Update() {
     var m *float32
-    if t.Parent != nil {
-        m = &(t.Parent.Matrix[0])
+    if t.parentTransform != nil {
+        m = &(t.parentTransform.Matrix[0])
     } else {
         m = &(t.Matrix[0])
     }
@@ -74,7 +74,7 @@ func (t *Transform) Update() {
     gl.GetFloatv(gl.MODELVIEW_MATRIX, &(t.Matrix[0]))
     t.NeedsUpdate = false
 
-    for _, c := range t.Children {
+    for _, c := range t.childTransforms {
         c.Update()
     }
 }
