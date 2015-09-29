@@ -21,7 +21,7 @@ func NewBaseComponent(verts []float32, parent *Transform) *BaseComponent {
 }
 
 func (b *BaseComponent) AddToLayer(name string) {
-    layer := G.Renderer.RenderList.GetLayer(name)
+    layer := GetLayers(name)
 
     if b.Renderable.Layer != nil {
         b.Renderable.Layer.Remove(b.Renderable.Element)
