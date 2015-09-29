@@ -8,7 +8,7 @@ import (
 type Renderable struct {
     VboPosition VboPosition
     Element *list.Element
-    Layer *Layers
+    Layer *Layer
     Length int
 }
 

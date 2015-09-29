@@ -12,7 +12,7 @@ const (
 type Renderer struct {
     Vbos []*Vbo
     VboPosition VboPosition
-    Layers *Layers
+    Layer *Layer
 }
 
 func NewRenderer() *Renderer {
@@ -23,10 +23,8 @@ func NewRenderer() *Renderer {
             Vbo: vbo,
             Index: 0,
         },
-        Layers: NewLayers(),
+        Layer: NewLayer("base"),
     }
-
-    r.Layers.AppendLayers("default")
     return r
 }
 
@@ -36,7 +34,7 @@ func (r *Renderer) Render() {
     rVbo := r.Vbos[0]
     gl.BindBuffer(gl.ARRAY_BUFFER, rVbo.Id)
 
-    for _, c := range r.Layers.Flatten() {
+    for _, c := range r.Layer.Flatten() {
         renderable := c.GetRenderable()
         transform := c.GetTransform()
 

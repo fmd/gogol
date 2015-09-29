@@ -4,43 +4,45 @@ import (
     "container/list"
 )
 
-var LayerMap map[string]*Layers
+var LayerMap map[string]*Layer
 
 func init() {
-    LayerMap = make(map[string]*Layers)
+    LayerMap = make(map[string]*Layer)
 }
 
-func GetLayers(name string) *Layers {
+func GetLayer(name string) *Layer {
     return LayerMap[name]
 }
 
-type Layers struct {
+type Layer struct {
     *list.List
     visible bool
 }
 
-func NewLayers() *Layers {
-    l := &Layers{
+func NewLayer(name string) *Layer {
+    l := &Layer{
         List: list.New(),
+        visible: true,
     }
 
+    LayerMap[name] = l
     return l
 }
 
-func (l *Layers) Visible() bool {
+func (l *Layer) Visible() bool {
     return l.visible
 }
 
-func (l *Layers) Show() {
+func (l *Layer) Show() {
     l.visible = true
 }
 
-func (l *Layers) Hide() {
+func (l *Layer) Hide() {
     l.visible = false
 }
 
-func (l *Layers) AppendLayers(name string) {
-    LayerMap[name] = &Layers{
+func (l *Layer) AppendLayer(name string) {
+    LayerMap[name] = &Layer{
         List: list.New(),
         visible: true,
     }
@@ -48,8 +50,8 @@ func (l *Layers) AppendLayers(name string) {
     l.PushBack(LayerMap[name])
 }
 
-func (l *Layers) PrependLayers(name string) {
-    LayerMap[name] = &Layers{
+func (l *Layer) PrependLayer(name string) {
+    LayerMap[name] = &Layer{
         List: list.New(),
         visible: true,
     }
@@ -57,10 +59,10 @@ func (l *Layers) PrependLayers(name string) {
     l.PushBack(LayerMap[name])
 }
 
-func (l *Layers) Flatten() []Component {
+func (l *Layer) Flatten() []Component {
     var components []Component
     for el := l.Front(); el != nil; el = el.Next() {
-        layer, ok := el.Value.(*Layers)
+        layer, ok := el.Value.(*Layer)
         if !ok {
             if element, ok := el.Value.(Component); ok {
                 components = append(components, element)

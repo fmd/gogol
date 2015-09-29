@@ -16,12 +16,12 @@ func NewBaseComponent(verts []float32, parent *Transform) *BaseComponent {
         visible: true,
     }
 
-    c.AddToLayer("default")
+    c.AddToLayer("base")
     return c
 }
 
 func (b *BaseComponent) AddToLayer(name string) {
-    layer := GetLayers(name)
+    layer := GetLayer(name)
 
     if b.Renderable.Layer != nil {
         b.Renderable.Layer.Remove(b.Renderable.Element)
